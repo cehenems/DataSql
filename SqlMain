@@ -1,0 +1,99 @@
+public class MainActivity extends AppCompatActivity {
+    EditText etAd, etSoyad, etTel, etMail, etNo;
+    Button btnKaydet, btnsil, btnDuzelt;
+    ListView lvKisiler;
+    int secilenId = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        etAd = findViewById(R.id.etAd);
+        etSoyad = findViewById(R.id.etSoyad);
+        etTel = findViewById(R.id.etTel);
+        etNo = findViewById(R.id.etNo);
+        etMail = findViewById(R.id.etMail);
+        btnKaydet = findViewById(R.id.btnKaydet);
+        btnDuzelt = findViewById(R.id.btnduzelt);
+        btnsil = findViewById(R.id.btnSil);
+        lvKisiler = findViewById(R.id.lvKisiler);
+
+        btnKaydet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String gelenAd = etAd.getText().toString();
+                String gelenSoyad = etSoyad.getText().toString();
+                String gelenTel = etTel.getText().toString();
+                String gelenMail = etMail.getText().toString();
+                String gelenNo = etNo.getText().toString();
+                VeriTabani vt = new VeriTabani(MainActivity.this);
+                vt.veriEkle(gelenAd, gelenSoyad, gelenTel, gelenMail, gelenNo);
+                Toast.makeText(getApplicationContext(), "Kayıt yapıldı", Toast.LENGTH_SHORT).show();
+                temizle();
+                listele();
+            }
+        });
+        btnDuzelt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String gelenAd = etAd.getText().toString();
+                String gelenSoyad = etSoyad.getText().toString();
+                String gelenTel = etTel.getText().toString();
+                String gelenMail = etMail.getText().toString();
+                String gelenNo = etNo.getText().toString();
+                VeriTabani vt = new VeriTabani(MainActivity.this);
+                vt.veriDuzenle(secilenId,gelenAd, gelenSoyad, gelenTel, gelenMail, gelenNo);
+                Toast.makeText(getApplicationContext(), "Kayıt Düzeltildi", Toast.LENGTH_SHORT).show();
+                temizle();
+                listele();
+
+            }
+        });
+        btnsil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VeriTabani vt = new VeriTabani(MainActivity.this);
+                vt.veriSil(secilenId);
+                Toast.makeText(getApplicationContext(), "Kayıt Silindi", Toast.LENGTH_SHORT).show();
+                temizle();
+                listele();
+            }
+        });
+    }
+
+    private void listele() {
+        VeriTabani vt = new VeriTabani(MainActivity.this);
+        List<String> gelenVeriler = vt.Listele();
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, gelenVeriler);
+        lvKisiler.setAdapter(adapter);
+        lvKisiler.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String secilen = lvKisiler.getItemAtPosition(position).toString();
+                Toast.makeText(getApplicationContext(), "" + secilen, Toast.LENGTH_SHORT).show();
+                String [] itemBolunen=secilen.split("/");
+                secilenId=Integer.parseInt(itemBolunen[0].toString());
+                String secilenAd=itemBolunen[1].toString();
+                String secilenSoyad=itemBolunen[2].toString();
+                String secilenTel=itemBolunen[3].toString();
+                String secilenMail=itemBolunen[4].toString();
+                String secilenNo =itemBolunen[5].toString();
+                etAd.setText(secilenAd);
+                etSoyad.setText(secilenSoyad);
+                etTel.setText(secilenTel);
+                etMail.setText(secilenMail);
+                etNo.setText(secilenNo);
+            }
+        });
+    }
+
+    private void temizle() {
+        etAd.setText(null);
+        etSoyad.setText(null);
+        etTel.setText(null);
+        etMail.setText(null);
+        etNo.setText(null);
+
+
+    }
+}
